@@ -23,7 +23,8 @@ const app = express();
 
 // Use Morgan to log HTTP requests
 app.use(morgan('dev'));
-
+app.set('view engine', 'hbs');
+app.set('views', __dirname + '/views');
 // Parse JSON request bodies
 app.use(express.json());
 app.use(bodyParser.json());
@@ -31,6 +32,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('public'))
 app.use(cookieParser())
 
+
+app.get('/',(req,res)=>{
+    res.render('index')
+})
 app.use('/api/v1/auth',authRoute)
 app.use('/api/v1/course',courseRoute)
 app.use('/api/v1/category',categoryRoute)
