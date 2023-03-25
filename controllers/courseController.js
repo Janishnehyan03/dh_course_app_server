@@ -1,20 +1,20 @@
 const Course = require("../models/CourseModel");
+const {
+  getAllItems,
+  getItemSlug,
+  setDeleteStatus,
+} = require("./globalFunctions");
 
 exports.createCourse = async (req, res, next) => {
+  console.log("function called");
   try {
+    const { videoUrl, videoTitle } = req.body;
     const course = new Course({
-      title: req.body.title,
-      description: req.body.description,
-      thumbnail: req.file.filename, // multer saves the filename in the 'file' object
-      videoUrl: req.body.videoUrl,
-      learners: [],
-      price: req.body.price,
-      category: req.body.category,
-      creator: req.body.creator,
+      ...req.body,
+      thumbnail: req.file.filename,
     });
 
     const newCourse = await course.save();
-
     res.status(201).json(newCourse);
   } catch (err) {
     next(err);
@@ -22,9 +22,9 @@ exports.createCourse = async (req, res, next) => {
 };
 exports.getAllCourses = async (req, res, next) => {
   try {
-    const courses = await Course.find({ deleted: false })
-      .populate("category", "name")
-      .populate("creator", "name");
+    let { sort } = req.query;
+    let populateFields = "creator,category";
+    const courses = await getAllItems(Course, req.query, populateFields, sort);
     res.json({ results: courses.length, courses });
   } catch (err) {
     next(err);
@@ -32,13 +32,11 @@ exports.getAllCourses = async (req, res, next) => {
 };
 exports.getOneCourse = async (req, res, next) => {
   try {
-    const course = await Course.findById(req.params.id)
-      .populate("category", "name")
-      .populate("creator", "name")
-      .populate("learners", "name");
-    if (!course) {
-      return res.status(404).json({ message: "Course not found" });
-    }
+    const course = await getItemSlug(
+      Course,
+      req.params.slug,
+      "category,creator"
+    );
     res.json(course);
   } catch (err) {
     next(err);
@@ -47,16 +45,24 @@ exports.getOneCourse = async (req, res, next) => {
 
 exports.deleteCourse = async (req, res, next) => {
   try {
-    const course = await Course.findByIdAndUpdate(
-      req.params.id,
-      { deleted: true },
-      { new: true }
-    );
-    if (!course) {
-      return res.status(404).json({ message: "course not found" });
-    }
+    const course = await setDeleteStatus(Course, req.params.id);
     res.json({ message: "course deleted" });
   } catch (err) {
     next(err);
+  }
+};
+exports.addVideo = async (req, res, next) => {
+  try {
+    const videoObj = req.body.videoObj;
+    let course = await Course.findByIdAndUpdate(
+      req.params.id,
+      {
+        $push: { videos: videoObj },
+      },
+      { new: true }
+    );
+    res.status(200).json(course);
+  } catch (error) {
+    next(error);
   }
 };

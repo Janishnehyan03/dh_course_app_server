@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const multer = require("multer");
 const { protect, restrictTo } = require("../controllers/authController");
+const fs=require('fs')
 
 const Category = require("../models/CategoryModel");
 // Set up multer storage engine
@@ -44,7 +45,7 @@ router.post(
   async (req, res, next) => {
     try {
       const { name } = req.body;
-      const image = req.file ? req.file.path : null;
+      const image = req.file ? req.file.filename : null;
 
       const category = await Category.create({ name, image });
       res.status(201).json(category);

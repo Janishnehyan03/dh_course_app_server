@@ -3,9 +3,12 @@ const {
   createCourse,
   getAllCourses,
   getOneCourse,
+  deleteCourse,
+  addVideo,
 } = require("../controllers/courseController");
 const router = require("express").Router();
-const fs=require('fs')
+const fs = require("fs");
+const { protect, restrictTo } = require("../controllers/authController");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -22,8 +25,21 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-router.post("/", upload.single("thumbnail"), createCourse);
+router.post(
+  "/",
+  protect,
+  restrictTo("admin"),
+  upload.single("thumbnail"),
+  createCourse
+);
+router.post(
+  "/:id",
+  protect,
+  restrictTo("admin"),
+  addVideo
+);
 router.get("/", getAllCourses);
-router.get("/:id", getOneCourse);
+router.get("/:slug", getOneCourse);
+router.delete("/:id", protect, restrictTo("admin"), deleteCourse);
 
 module.exports = router;

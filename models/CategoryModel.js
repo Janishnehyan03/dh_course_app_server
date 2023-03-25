@@ -7,6 +7,7 @@ const categorySchema = new mongoose.Schema(
       required: [true, 'Name is required.'],
       maxLength: [50, 'Name cannot exceed 50 characters.'],
       minLength: [3, 'Name must be at least 3 characters.'],
+      unique:true
     },
     image: {
       type: String,
