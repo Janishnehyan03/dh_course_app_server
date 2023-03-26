@@ -1,4 +1,4 @@
-name: 'CICD FOR COURSE APP'
+name: 'CICD FOR DH COURSE APP'
 
 on:
   push:
