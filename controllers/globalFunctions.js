@@ -5,7 +5,7 @@ exports.getAllItems = async (Model, reqQuery, populateFields, sort) => {
   try {
     let query = Model.find({ deleted: false });
     if (reqQuery) {
-      query = Model.find({ ...reqQuery, deleted: true });
+      query = Model.find({ ...reqQuery, });
     }
 
     if (populateFields) {
