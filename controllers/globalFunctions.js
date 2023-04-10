@@ -41,13 +41,13 @@ exports.getItemById = async (Model, id) => {
     return new AppError("Error occured", 400);
   }
 };
-exports.getItemSlug = async (Model, slug, populateFields) => {
+exports.getItemSlug = async (Model, slug, populateFields,selectField) => {
   try {
-    let query = Model.findOne({ slug });
+    let query = Model.findOne({ slug }).select(selectField)
     if (populateFields) {
       const fields = populateFields.split(",");
       fields.forEach((field) => {
-        query = query.populate(field);
+        query = query.populate(field)
       });
     }
     const item = await query.exec();

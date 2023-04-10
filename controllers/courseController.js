@@ -35,8 +35,9 @@ exports.getOneCourse = async (req, res, next) => {
     const course = await getItemSlug(
       Course,
       req.params.slug,
-      "category,creator"
-    );
+      "category,creator",
+      'videos'
+    )
     res.json(course);
   } catch (err) {
     next(err);
