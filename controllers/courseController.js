@@ -32,12 +32,10 @@ exports.getAllCourses = async (req, res, next) => {
 };
 exports.getOneCourse = async (req, res, next) => {
   try {
-    const course = await getItemSlug(
-      Course,
-      req.params.slug,
-      "category,creator",
-      'videos'
-    )
+    const course = await Course.findOne({ slug: req.params.slug })
+      .populate("category,creator")
+      .select("videos");
+
     res.json(course);
   } catch (err) {
     next(err);
