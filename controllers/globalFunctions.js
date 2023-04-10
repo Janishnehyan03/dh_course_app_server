@@ -56,7 +56,7 @@ exports.getItemSlug = async (Model, slug, populateFields,selectField) => {
     }
     return item;
   } catch (err) {
-    console.error(err.message);
+    console.error(err);
     throw new AppError("Error retrieving item from database", 500);
   }
 };
