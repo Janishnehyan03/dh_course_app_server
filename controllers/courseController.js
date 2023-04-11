@@ -33,7 +33,7 @@ exports.getAllCourses = async (req, res, next) => {
 exports.getOneCourse = async (req, res, next) => {
   try {
     const course = await Course.findOne({ slug: req.params.slug })
-      .populate("category,creator")
+      .populate("creator").populate('category')
       .select("videos");
 
     res.json(course);

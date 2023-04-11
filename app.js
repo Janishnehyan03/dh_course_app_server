@@ -8,7 +8,8 @@ const categoryRoute=require('./routes/categoryRoute')
 const creatorRoute=require('./routes/creatorRoute')
 const bodyParser = require('body-parser');
 const errorController = require('./controllers/errorController');
-const cookieParser=require('cookie-parser')
+const cookieParser=require('cookie-parser');
+const AppError = require('./utils/AppError');
 
 // Load environment variables from .env file
 dotenv.config();
@@ -41,6 +42,8 @@ app.use('/api/v1/course',courseRoute)
 app.use('/api/v1/category',categoryRoute)
 app.use('/api/v1/creator',creatorRoute)
 app.use(errorController)
-
+app.all("*", (req, res, next) => {
+    next(new AppError(`Cant find ${req.originalUrl}  on the server`, 404));
+  });
 
 module.exports=app
