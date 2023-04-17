@@ -6,6 +6,7 @@ const authRoute=require('./routes/authRoute')
 const courseRoute=require('./routes/courseRoute')
 const categoryRoute=require('./routes/categoryRoute')
 const creatorRoute=require('./routes/creatorRoute')
+const bookingRoute=require('./routes/bookingRoute')
 const bodyParser = require('body-parser');
 const errorController = require('./controllers/errorController');
 const cookieParser=require('cookie-parser');
@@ -41,6 +42,7 @@ app.use('/api/v1/auth',authRoute)
 app.use('/api/v1/course',courseRoute)
 app.use('/api/v1/category',categoryRoute)
 app.use('/api/v1/creator',creatorRoute)
+app.use('/api/v1/booking',bookingRoute)
 app.use(errorController)
 app.all("*", (req, res, next) => {
     next(new AppError(`Cant find ${req.originalUrl}  on the server`, 404));
