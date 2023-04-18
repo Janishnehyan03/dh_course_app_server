@@ -40,7 +40,7 @@ jobs:
                 whoami
                 cd  ./dh_course_app_server
                 git pull origin master
-                # git pull --rebase
+                git pull --rebase
                 npm install --force
                 pm2 reload server.js
                 sudo nginx -t

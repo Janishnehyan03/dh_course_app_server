@@ -11,6 +11,7 @@ const bodyParser = require('body-parser');
 const errorController = require('./controllers/errorController');
 const cookieParser=require('cookie-parser');
 const AppError = require('./utils/AppError');
+const cors=require('cors')
 
 // Load environment variables from .env file
 dotenv.config();
@@ -33,7 +34,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static('public'))
 app.use(cookieParser())
-
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+  })
+);
 
 app.get('/',(req,res)=>{
     res.render('index')

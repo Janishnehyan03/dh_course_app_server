@@ -9,7 +9,7 @@ const instance = new Razorpay({
   key_secret: process.env.RAZOR_PAY_SECRET,
 });
 
-router.post("/:id",  async (req, res, next) => {
+router.post("/:id", protect, async (req, res, next) => {
   try {
     const course = await Course.findById(req.params.id);
     const options = {
@@ -20,8 +20,7 @@ router.post("/:id",  async (req, res, next) => {
     instance.orders.create(options, async function (err, order) {
       await Booking.create({
         course: req.params.id,
-        // user: req.user._id,
-        user:"641ee9b87bb5446f361e1f88",
+        user: req.user._id,
         razorpay_order_id: order.id,
         price: course.price,
       });
@@ -35,20 +34,20 @@ router.post("/:id",  async (req, res, next) => {
     res.status(400).json(error);
   }
 });
-router.post("/success/booking",  async (req, res, next) => {
+router.post("/success/booking",protect,  async (req, res, next) => {
   try {
     const course = await Booking.findOneAndUpdate(
       { razorpay_order_id: req.body.razorpay_order_id },
       {
         course: req.body.course,
-        // user: req.user._id,
-        user: "641ee9b87bb5446f361e1f88",
+        user: req.user._id,
         razorpay_payment_id: req.body.razorpay_payment_id,
         razorpay_order_id: req.body.razorpay_order_id,
         razorpay_signature: req.body.razorpay_signature,
         price: Math.floor(req.body.price / 100),
       }
     );
+    
     try {
       await verifyPayment(
         req.body.razorpay_payment_id,
