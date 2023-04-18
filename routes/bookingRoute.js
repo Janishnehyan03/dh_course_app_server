@@ -36,8 +36,6 @@ router.post("/:id", protect, async (req, res, next) => {
 });
 router.post("/success/booking", protect, async (req, res, next) => {
   try {
-    console.log(req.body);
-    console.log(req.user);
     const course = await Booking.findOneAndUpdate(
       { razorpay_order_id: req.body.razorpay_order_id },
       {
@@ -46,7 +44,7 @@ router.post("/success/booking", protect, async (req, res, next) => {
         razorpay_payment_id: req.body.razorpay_payment_id,
         razorpay_order_id: req.body.razorpay_order_id,
         razorpay_signature: req.body.razorpay_signature,
-        price: Math.floor(req.body.price / 100),
+        price: req.body.price
       }
     );
     try {
