@@ -79,7 +79,7 @@ function verifyPayment(paymentId, orderId, signature, courseId, userId) {
         { paid: true },
         { new: true }
       );
-      await Course.findOneAndUpdate(courseId, { $push: { learners: userId } });
+      await Course.findOneAndUpdate(courseId, { $push: { learners: userId } },{new:true});
       resolve();
     } else {
       reject();
