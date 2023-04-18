@@ -44,14 +44,16 @@ router.post("/success/booking", protect, async (req, res, next) => {
         razorpay_payment_id: req.body.razorpay_payment_id,
         razorpay_order_id: req.body.razorpay_order_id,
         razorpay_signature: req.body.razorpay_signature,
-        price: req.body.price
+        price: req.body.price,
       }
     );
     try {
       await verifyPayment(
         req.body.razorpay_payment_id,
         req.body.razorpay_order_id,
-        req.body.razorpay_signature
+        req.body.razorpay_signature,
+        req.body.course,
+        req.user._id
       );
       res.status(200).json({
         status: "success",
@@ -66,7 +68,7 @@ router.post("/success/booking", protect, async (req, res, next) => {
     next(error);
   }
 });
-function verifyPayment(paymentId, orderId, signature) {
+function verifyPayment(paymentId, orderId, signature, courseId, userId) {
   return new Promise(async (resolve, reject) => {
     const hmac = crypto.createHmac("sha256", process.env.RAZOR_PAY_SECRET);
     hmac.update(orderId + "|" + paymentId);
@@ -77,6 +79,7 @@ function verifyPayment(paymentId, orderId, signature) {
         { paid: true },
         { new: true }
       );
+      await Course.findOneAndUpdate(courseId, { $push: { learners: userId } });
       resolve();
     } else {
       reject();
