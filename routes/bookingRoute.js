@@ -35,6 +35,7 @@ router.post("/:id", protect, async (req, res, next) => {
   }
 });
 router.post("/success/booking", protect, async (req, res, next) => {
+  console.log(req.body);
   try {
     const course = await Booking.findOneAndUpdate(
       { razorpay_order_id: req.body.razorpay_order_id },
