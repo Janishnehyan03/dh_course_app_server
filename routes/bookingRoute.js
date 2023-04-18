@@ -34,8 +34,10 @@ router.post("/:id", protect, async (req, res, next) => {
     res.status(400).json(error);
   }
 });
-router.post("/success/booking",protect,  async (req, res, next) => {
+router.post("/success/booking", protect, async (req, res, next) => {
   try {
+    console.log(req.body);
+    console.log(req.user);
     const course = await Booking.findOneAndUpdate(
       { razorpay_order_id: req.body.razorpay_order_id },
       {
@@ -47,7 +49,6 @@ router.post("/success/booking",protect,  async (req, res, next) => {
         price: Math.floor(req.body.price / 100),
       }
     );
-    
     try {
       await verifyPayment(
         req.body.razorpay_payment_id,
@@ -59,7 +60,7 @@ router.post("/success/booking",protect,  async (req, res, next) => {
         course,
       });
     } catch (error) {
-        console.log(error);
+      console.log(error);
       res.status(400).send("Payment verification failed");
     }
   } catch (error) {
@@ -68,20 +69,20 @@ router.post("/success/booking",protect,  async (req, res, next) => {
   }
 });
 function verifyPayment(paymentId, orderId, signature) {
-    return new Promise(async (resolve, reject) => {
-      const hmac = crypto.createHmac("sha256", process.env.RAZOR_PAY_SECRET);
-      hmac.update(orderId + "|" + paymentId);
-      const calculatedSignature = hmac.digest("hex");
-      if (calculatedSignature === signature) {
-        await Booking.findOneAndUpdate(
-          { razorpay_order_id: orderId },
-          { paid: true },
-          { new: true }
-        );
-        resolve();
-      } else {
-        reject();
-      }
-    });
-  }
+  return new Promise(async (resolve, reject) => {
+    const hmac = crypto.createHmac("sha256", process.env.RAZOR_PAY_SECRET);
+    hmac.update(orderId + "|" + paymentId);
+    const calculatedSignature = hmac.digest("hex");
+    if (calculatedSignature === signature) {
+      await Booking.findOneAndUpdate(
+        { razorpay_order_id: orderId },
+        { paid: true },
+        { new: true }
+      );
+      resolve();
+    } else {
+      reject();
+    }
+  });
+}
 module.exports = router;
