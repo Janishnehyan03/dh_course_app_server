@@ -6,9 +6,7 @@ const {
 } = require("./globalFunctions");
 
 exports.createCourse = async (req, res, next) => {
-  console.log("function called");
   try {
-    const { videoUrl, videoTitle } = req.body;
     const course = new Course({
       ...req.body,
       thumbnail: req.file.filename,
