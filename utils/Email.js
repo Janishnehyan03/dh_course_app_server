@@ -2,6 +2,7 @@ const nodemailer = require("nodemailer");
 const hbs = require("nodemailer-express-handlebars");
 const dotenv = require("dotenv");
 const { dirname } = require("path");
+const path = require("path");
 dotenv.config();
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -18,7 +19,7 @@ transporter.use(
   hbs({
     viewEngine: {
       extname: ".hbs",
-      partialsDir: dirname(require.main.filename) + "/views",
+      partialsDir: path.join(process.cwd("/views")),
       defaultLayout: false,
     },
     viewPath: "./views",
