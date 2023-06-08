@@ -1,15 +1,4 @@
-const mongoose = require("mongoose");
 const app = require("./app");
-const { graphqlHTTP } = require("express-graphql");
-const schema = require("./models/graphQlSchema");
-
-app.use(
-  "/graphql",
-  graphqlHTTP({
-    schema,
-    graphiql: process.env.NODE_ENV === "development",
-  })
-);
 
 app.all("*", (req, res, next) => {
   res
