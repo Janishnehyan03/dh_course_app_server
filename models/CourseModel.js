@@ -54,7 +54,7 @@ const courseSchema = new mongoose.Schema(
       {
         videoUrl: {
           type: String,
-          select: false,
+          // select: false,
         },
         videoTitle: {
           type: String,
