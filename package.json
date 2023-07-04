@@ -28,6 +28,7 @@
     "nodemailer-express-handlebars": "^6.1.0",
     "passport": "^0.6.0",
     "razorpay": "^2.8.6",
-    "slugify": "^1.6.5"
+    "slugify": "^1.6.5",
+    "stripe": "^12.9.0"
   }
 }

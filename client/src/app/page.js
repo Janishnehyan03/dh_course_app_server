@@ -1,9 +1,9 @@
-import YoutubePlayer from "./components/YoutubePlayer";
+import VideoPlayer from "./components/ReactPlayer";
 
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <YoutubePlayer />
+      <VideoPlayer />
     </main>
   );
 }
