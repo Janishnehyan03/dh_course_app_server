@@ -7,23 +7,22 @@ const {
   addVideo,
 } = require("../controllers/courseController");
 const router = require("express").Router();
-const fs = require("fs");
 const { protect, restrictTo } = require("../controllers/authController");
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const folderName = "./uploads/courses";
-    if (!fs.existsSync(folderName)) {
-      fs.mkdirSync(folderName);
-    }
-    cb(null, folderName);
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`);
-  },
-});
+// const storage = multer.diskStorage({
+//   destination: (req, file, cb) => {
+//     const folderName = "./uploads/courses";
+//     if (!fs.existsSync(folderName)) {
+//       fs.mkdirSync(folderName);
+//     }
+//     cb(null, folderName);
+//   },
+//   filename: (req, file, cb) => {
+//     cb(null, `${Date.now()}-${file.originalname}`);
+//   },
+// });
 
-const upload = multer({ storage });
+const upload = multer();
 
 router.post(
   "/",
