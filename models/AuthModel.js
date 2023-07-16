@@ -40,17 +40,7 @@ const authSchema = new mongoose.Schema({
     default:false
   }
 });
-// authSchema.pre("save", async function (next) {
-//   const otpToken = crypto.randomBytes(32).toString("hex"); //create a normal string
-//   this.otpToken = crypto //convert the resetToken to encrypted
-//     .createHash("sha256")
-//     .update(otpToken)
-//     .digest("hex");
-//   this.otpTokenExpires = Date.now() + 1 * 60 * 1000; //expires in 10 minutes
-//   if (!this.isModified("password")) return next();
-//   this.password = await bcrypt.hash(this.password, 12);
-//   next();
-// });
+
 authSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 12);
