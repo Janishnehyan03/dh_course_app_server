@@ -204,32 +204,33 @@ exports.logout = (req, res) => {
   });
   res.status(200).json({ status: "success" });
 };
-exports.getUser = async (req, res) => {
+exports.getUser = async (req, res, next) => {
   try {
     let token;
     if (
       req.headers.authorization &&
-      req.headers.authorization.startsWith("Bearer")
+      req.headers.authorization.startsWith('Bearer')
     ) {
-      token = req.headers.authorization.split(" ")[1];
+      token = req.headers.authorization.split(' ')[1];
     } else if (req.cookies.jwt) {
       token = req.cookies.jwt;
     }
 
     if (!token) {
-      return null;
+      return res.status(401).json({ message: 'Unauthorized' });
     }
+
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await AuthModel.findById(decoded.userId);
 
     if (!user) {
-      return res.status(401).json({
-        message: "The user belonging to this token no longer exists.",
-      });
+      return res
+        .status(401)
+        .json({ message: 'The user belonging to this token no longer exists.' });
     }
 
-    res.status(200).json(user)
+    res.status(200).json(user);
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
