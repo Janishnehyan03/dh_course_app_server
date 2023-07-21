@@ -14,8 +14,8 @@ const courseSchema = new mongoose.Schema(
     description: {
       type: String,
       required: [true, "Description is required."],
-      maxLength: [1000, "Description cannot exceed 1000 characters."],
-      minLength: [10, "Description must be at least 10 characters."],
+      // maxLength: [1000, "Description cannot exceed 1000 characters."],
+      // minLength: [10, "Description must be at least 10 characters."],
     },
     thumbnail: {
       type: String,
@@ -55,9 +55,12 @@ const courseSchema = new mongoose.Schema(
         videoUrl: {
           type: String,
           // select: false,
+          required:true
+
         },
         videoTitle: {
           type: String,
+          required:true
         },
       },
     ],
