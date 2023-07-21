@@ -1,7 +1,9 @@
 const router = require("express").Router();
 const Creator = require("../models/CreatorModel");
-const multer=require('multer')
-const fs=require('fs')
+const multer = require("multer");
+const fs = require("fs");
+const AWS = require("aws-sdk");
+const sharp = require("sharp");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -16,23 +18,61 @@ const storage = multer.diskStorage({
   },
 });
 
-const upload = multer({ storage });
+const upload = multer();
 
 router.post("/", upload.single("image"), async (req, res, next) => {
+  console.log(req.body.phone)
+  if (!req.file) {
+    return res.status(400).json({ error: "No image provided" });
+  }
+  const spacesEndpoint = new AWS.Endpoint("blr1.digitaloceanspaces.com"); // Use the correct endpoint for your region
+  const s3 = new AWS.S3({
+    endpoint: spacesEndpoint,
+    accessKeyId: process.env.SPACES_KEY,
+    secretAccessKey: process.env.SPACES_SECRET,
+  });
+
+  const { originalname, buffer } = req.file;
+  const { width, height } = await sharp(buffer).metadata();
+  const targetWidth = Math.ceil((300 * width) / 300); // Assuming the original image is 300 PPI
+  const targetHeight = Math.ceil((300 * height) / 300); // Assuming the original image is 300 PPI
+  
+  const compressedImageBuffer = await sharp(buffer)
+    .resize(targetWidth, targetHeight, {
+      fit: "inside",
+      withoutEnlargement: true,
+    })
+    .toFormat("jpeg")
+    .jpeg({ quality: 80 })
+    .toBuffer();
+  // Set the bucket name and file path
+  const bucketName = "cpet-storage";
+  const filePath = `creators/${originalname}`;
+
+  // Set the upload parameters
+  const uploadParams = {
+    Bucket: bucketName,
+    Key: filePath,
+    Body: compressedImageBuffer,
+    ACL: "public-read", // Set the desired ACL for the uploaded file
+  };
   try {
+    const uploadResult = await s3.upload(uploadParams).promise();
+    const thumbnailURL = uploadResult.Location;
+
     let creator = await Creator.create({
       ...req.body,
-      image: req.file.filename,
+      image: thumbnailURL,
     });
-    res.status(201).json(creator)
+    res.status(201).json(creator);
   } catch (error) {
     next(error);
   }
 });
-router.get("/",async (req, res, next) => {
+router.get("/", async (req, res, next) => {
   try {
     let creators = await Creator.find();
-    res.status(200).json(creators)
+    res.status(200).json(creators);
   } catch (error) {
     next(error);
   }

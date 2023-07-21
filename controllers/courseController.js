@@ -14,6 +14,7 @@ exports.createCourse = async (req, res, next) => {
     secretAccessKey: process.env.SPACES_SECRET,
   });
   const { originalname, buffer } = req.file;
+  console.log(req.file);
 
   const compressedImageBuffer = await sharp(buffer)
     .resize({ fit: "inside", withoutEnlargement: true })

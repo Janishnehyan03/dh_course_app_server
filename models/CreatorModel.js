@@ -21,10 +21,11 @@ const creatorSchema = new mongoose.Schema(
       type: String,
       required: [true, "Image URL is required."],
     },
-    phoneNumber: {
+    phone: {
       type: String,
-      required: [true, "Phone number is required."],
-      match: [/^\+?\d{10,14}$/, "Please provide a valid phone number."],
+    },
+    description: {
+      type: String,
     },
   },
   {
