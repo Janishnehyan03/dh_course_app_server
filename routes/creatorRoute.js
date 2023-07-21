@@ -5,18 +5,7 @@ const fs = require("fs");
 const AWS = require("aws-sdk");
 const sharp = require("sharp");
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    const folderName = "./uploads/creators";
-    if (!fs.existsSync(folderName)) {
-      fs.mkdirSync(folderName);
-    }
-    cb(null, folderName);
-  },
-  filename: (req, file, cb) => {
-    cb(null, `${Date.now()}-${file.originalname}`);
-  },
-});
+
 
 const upload = multer();
 
