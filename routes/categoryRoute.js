@@ -19,7 +19,7 @@ router.post("/", protect, restrictTo("admin"), async (req, res, next) => {
 
 router.get("/", async (req, res, next) => {
   try {
-    const categories = await Category.find();
+    const categories = await Category.find({ deleted: { $ne: true } });
     res.json(categories);
   } catch (err) {
     next(err);
@@ -27,7 +27,9 @@ router.get("/", async (req, res, next) => {
 });
 router.get("/:id", async (req, res, next) => {
   try {
-    const category = await Category.findById(req.params.id);
+    const category = await Category.findById(req.params.id, {
+      deleted: { $ne: true },
+    });
     if (!category) {
       return res.status(404).json({ message: "Category not found" });
     }
@@ -54,10 +56,12 @@ router.patch("/:id", async (req, res, next) => {
 });
 router.delete("/:id", async (req, res, next) => {
   try {
-    const category = await Category.findByIdAndDelete(req.params.id);
-    if (!category) {
-      return res.status(404).json({ message: "Category not found" });
-    }
+    const category = await Category.findByIdAndUpdate(
+      req.params.id,
+      { deleted: true },
+      { new: true }
+    );
+
     res.json({ message: "Category deleted" });
   } catch (err) {
     next(err);
