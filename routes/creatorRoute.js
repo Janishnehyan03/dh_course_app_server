@@ -5,12 +5,9 @@ const fs = require("fs");
 const AWS = require("aws-sdk");
 const sharp = require("sharp");
 
-
-
 const upload = multer();
 
 router.post("/", upload.single("image"), async (req, res, next) => {
-  console.log(req.body.phone)
   if (!req.file) {
     return res.status(400).json({ error: "No image provided" });
   }
@@ -21,22 +18,16 @@ router.post("/", upload.single("image"), async (req, res, next) => {
     secretAccessKey: process.env.SPACES_SECRET,
   });
 
-  const { originalname, buffer } = req.file;
-  const { width, height } = await sharp(buffer).metadata();
-  const targetWidth = Math.ceil((300 * width) / 300); // Assuming the original image is 300 PPI
-  const targetHeight = Math.ceil((300 * height) / 300); // Assuming the original image is 300 PPI
-  
   const compressedImageBuffer = await sharp(buffer)
-    .resize(targetWidth, targetHeight, {
-      fit: "inside",
-      withoutEnlargement: true,
-    })
+    .resize(700, 700)
     .toFormat("jpeg")
     .jpeg({ quality: 80 })
     .toBuffer();
   // Set the bucket name and file path
   const bucketName = "cpet-storage";
-  const filePath = `creators/${originalname}`;
+  const filePath = `creators/${
+    req.body.name + Math.floor(Date.now() / 1000)
+  }.jpeg`;
 
   // Set the upload parameters
   const uploadParams = {
@@ -60,7 +51,7 @@ router.post("/", upload.single("image"), async (req, res, next) => {
 });
 router.get("/", async (req, res, next) => {
   try {
-    let creators = await Creator.find();
+    let creators = await Creator.find({ deleted: { $ne: true } });
     res.status(200).json(creators);
   } catch (error) {
     next(error);
@@ -68,7 +59,9 @@ router.get("/", async (req, res, next) => {
 });
 router.get("/:id", async (req, res, next) => {
   try {
-    const creator = await Creator.findById(req.params.id);
+    const creator = await Creator.findById(req.params.id, {
+      deleted: { $ne: true },
+    });
     if (!creator) {
       return res.status(404).json({ message: "creator not found" });
     }
@@ -98,7 +91,11 @@ router.patch("/:id", async (req, res, next) => {
 });
 router.delete("/:id", async (req, res, next) => {
   try {
-    const creator = await Creator.findByIdAndDelete(req.params.id);
+    const creator = await Creator.findByIdAndUpdate(
+      req.params.id,
+      { deleted: true },
+      { new: true }
+    );
     if (!creator) {
       return res.status(404).json({ message: "creator not found" });
     }

@@ -3,44 +3,50 @@ const { getAllItems, setDeleteStatus } = require("./globalFunctions");
 const AWS = require("aws-sdk");
 const sharp = require("sharp");
 
+const uploadImage = async (req) => {
+  try {
+    const spacesEndpoint = new AWS.Endpoint("blr1.digitaloceanspaces.com"); // Use the correct endpoint for your region
+    const s3 = new AWS.S3({
+      endpoint: spacesEndpoint,
+      accessKeyId: process.env.SPACES_KEY,
+      secretAccessKey: process.env.SPACES_SECRET,
+    });
+    const { originalname, buffer } = req.file;
+
+    const compressedImageBuffer = await sharp(buffer)
+      .resize(2000, 1333)
+      .toFormat("jpeg")
+      .jpeg({ quality: 80 })
+      .toBuffer();
+    // Set the bucket name and file path
+    const bucketName = "cpet-storage";
+    const filePath = `courses/${req.body.title}.jpeg`;
+
+    // Set the upload parameters
+    const uploadParams = {
+      Bucket: bucketName,
+      Key: filePath,
+      Body: compressedImageBuffer,
+      ACL: "public-read", // Set the desired ACL for the uploaded file
+    };
+    const uploadResult = await s3.upload(uploadParams).promise();
+    const thumbnailURL = uploadResult.Location;
+    return thumbnailURL;
+  } catch (error) {}
+};
+
 exports.createCourse = async (req, res, next) => {
   if (!req.file) {
     return res.status(400).json({ error: "No image provided" });
   }
-  const spacesEndpoint = new AWS.Endpoint("blr1.digitaloceanspaces.com"); // Use the correct endpoint for your region
-  const s3 = new AWS.S3({
-    endpoint: spacesEndpoint,
-    accessKeyId: process.env.SPACES_KEY,
-    secretAccessKey: process.env.SPACES_SECRET,
-  });
-  const { originalname, buffer } = req.file;
-  console.log(req.file);
-
-  const compressedImageBuffer = await sharp(buffer)
-    .resize({ fit: "inside", withoutEnlargement: true })
-    .toFormat("jpeg")
-    .jpeg({ quality: 80 })
-    .toBuffer();
-  // Set the bucket name and file path
-  const bucketName = "cpet-storage";
-  const filePath = `courses/${originalname}`;
-
-  // Set the upload parameters
-  const uploadParams = {
-    Bucket: bucketName,
-    Key: filePath,
-    Body: compressedImageBuffer,
-    ACL: "public-read", // Set the desired ACL for the uploaded file
-  };
+  uploadImage(req);
 
   try {
     // Upload the file to DigitalOcean Spaces
-    const uploadResult = await s3.upload(uploadParams).promise();
-    const thumbnailURL = uploadResult.Location;
-
+    let imageUrl = await uploadImage(req);
     const course = new Course({
       ...req.body,
-      thumbnail: thumbnailURL,
+      thumbnail: imageUrl,
     });
 
     const newCourse = await course.save();
