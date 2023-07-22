@@ -9,10 +9,6 @@ const categorySchema = new mongoose.Schema(
       minLength: [3, 'Name must be at least 3 characters.'],
       unique:true
     },
-    image: {
-      type: String,
-      required: [true, 'Image is required.'],
-    },
   },
   {
     timestamps: true,
