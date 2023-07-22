@@ -105,4 +105,58 @@ router.delete("/:id", async (req, res, next) => {
   }
 });
 
+
+exports.updateCreatorThumbnail = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: "No image provided" });
+    }
+
+    const spacesEndpoint = new AWS.Endpoint("blr1.digitaloceanspaces.com"); // Use the correct endpoint for your region
+    const s3 = new AWS.S3({
+      endpoint: spacesEndpoint,
+      accessKeyId: process.env.SPACES_KEY,
+      secretAccessKey: process.env.SPACES_SECRET,
+    });
+
+    const { originalname, buffer } = req.file;
+
+    const compressedImageBuffer = await sharp(buffer)
+      .resize({ fit: "inside", withoutEnlargement: true })
+      .toFormat("jpeg")
+      .jpeg({ quality: 80 })
+      .toBuffer();
+
+    // Set the bucket name and file path
+    const bucketName = "cpet-storage";
+    const filePath = `creators/${originalname}`;
+
+    // Set the upload parameters
+    const uploadParams = {
+      Bucket: bucketName,
+      Key: filePath,
+      Body: compressedImageBuffer,
+      ACL: "public-read", // Set the desired ACL for the uploaded file
+    };
+
+    // Upload the file to DigitalOcean Spaces
+    const uploadResult = await s3.upload(uploadParams).promise();
+    const thumbnailURL = uploadResult.Location;
+
+    // Update the course with the new thumbnail URL
+    const course = await Creator.findByIdAndUpdate(
+      req.params.id,
+      { image: thumbnailURL },
+      { new: true }
+    );
+
+    if (!course) {
+      return res.status(404).json({ error: "Course not found" });
+    }
+
+    res.json(course);
+  } catch (err) {
+    next(err);
+  }
+};
 module.exports = router;

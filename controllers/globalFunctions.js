@@ -3,9 +3,9 @@ const AppError = require("../utils/AppError");
 
 exports.getAllItems = async (Model, reqQuery, populateFields, sort) => {
   try {
-    let query = Model.find({ deleted: false });
+    let query = Model.find({ deleted: { $ne: true } });
     if (reqQuery) {
-      query = Model.find({ ...reqQuery, });
+      query = Model.find({ ...reqQuery, deleted: { $ne: true } });
     }
 
     if (populateFields) {
@@ -41,13 +41,13 @@ exports.getItemById = async (Model, id) => {
     return new AppError("Error occured", 400);
   }
 };
-exports.getItemSlug = async (Model, slug, populateFields,selectField) => {
+exports.getItemSlug = async (Model, slug, populateFields, selectField) => {
   try {
-    let query = Model.findOne({ slug }).select(selectField)
+    let query = Model.findOne({ slug }).select(selectField);
     if (populateFields) {
       const fields = populateFields.split(",");
       fields.forEach((field) => {
-        query = query.populate(field)
+        query = query.populate(field);
       });
     }
     const item = await query.exec();
