@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const slugify = require("slugify");
 
 const creatorSchema = new mongoose.Schema(
   {
@@ -20,11 +21,20 @@ const creatorSchema = new mongoose.Schema(
       default: false,
       type: Boolean,
     },
+    slug: {
+      type: String,
+      required: true,
+    },
   },
   {
     timestamps: true,
   }
 );
-
+creatorSchema.pre("save", function (next) {
+  //pre middleware have a (next) key
+  //works before .save() & .create() , not work in .insert() and not for findByIdAnd...
+  this.slug = slugify(this.name, { lower: true });
+  next();
+});
 const Creator = mongoose.model("Creator", creatorSchema);
 module.exports = Creator;

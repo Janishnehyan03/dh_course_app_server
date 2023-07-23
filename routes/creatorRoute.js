@@ -24,7 +24,7 @@ const uploadImage = async (req) => {
       .toBuffer();
     // Set the bucket name and file path
     const bucketName = "cpet-storage";
-    const filePath = `creator/${req.body.name+"-" + Date.now()}.jpeg`;
+    const filePath = `creator/${req.body.name + "-" + Date.now()}.jpeg`;
 
     // Set the upload parameters
     const uploadParams = {
@@ -49,6 +49,7 @@ router.post("/", upload.single("image"), async (req, res, next) => {
     let creator = await Creator.create({
       ...req.body,
       image: imageURL,
+      slug: req.body.name,
     });
     res.status(201).json(creator);
   } catch (error) {
@@ -76,20 +77,9 @@ router.get("/:id", async (req, res, next) => {
     next(err);
   }
 });
-router.patch("/:id", async (req, res, next) => {
+router.patch("/:slug", async (req, res, next) => {
   try {
-    const { name } = req.body;
-    const image = req.file ? req.file.path : null;
-
-    let creator = await Creator.findById(req.params.id);
-    if (!creator) {
-      return res.status(404).json({ message: "creator not found" });
-    }
-
-    creator.name = name;
-    creator.image = image || creator.image; // If no new image was uploaded, keep the old image
-    await creator.save();
-
+    let creator = await Creator.findByIdAndUpdate(req.params.slug, req.body);
     res.json(creator);
   } catch (err) {
     next(err);
