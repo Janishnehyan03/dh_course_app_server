@@ -11,7 +11,7 @@ const uploadImage = async (req) => {
       accessKeyId: process.env.SPACES_KEY,
       secretAccessKey: process.env.SPACES_SECRET,
     });
-    const { originalname, buffer } = req.file;
+    const {  buffer } = req.file;
 
     const compressedImageBuffer = await sharp(buffer)
       .resize(2000, 1333)

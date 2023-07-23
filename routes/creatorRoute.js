@@ -7,42 +7,48 @@ const sharp = require("sharp");
 
 const upload = multer();
 
+const uploadImage = async (req) => {
+  try {
+    const spacesEndpoint = new AWS.Endpoint("blr1.digitaloceanspaces.com"); // Use the correct endpoint for your region
+    const s3 = new AWS.S3({
+      endpoint: spacesEndpoint,
+      accessKeyId: process.env.SPACES_KEY,
+      secretAccessKey: process.env.SPACES_SECRET,
+    });
+    const { buffer } = req.file;
+
+    const compressedImageBuffer = await sharp(buffer)
+      .resize(2000, 1333)
+      .toFormat("jpeg")
+      .jpeg({ quality: 80 })
+      .toBuffer();
+    // Set the bucket name and file path
+    const bucketName = "cpet-storage";
+    const filePath = `creator/${req.body.name+"-" + Date.now()}.jpeg`;
+
+    // Set the upload parameters
+    const uploadParams = {
+      Bucket: bucketName,
+      Key: filePath,
+      Body: compressedImageBuffer,
+      ACL: "public-read", // Set the desired ACL for the uploaded file
+    };
+    const uploadResult = await s3.upload(uploadParams).promise();
+    const thumbnailURL = uploadResult.Location;
+    return thumbnailURL;
+  } catch (error) {}
+};
 router.post("/", upload.single("image"), async (req, res, next) => {
   if (!req.file) {
     return res.status(400).json({ error: "No image provided" });
   }
-  const spacesEndpoint = new AWS.Endpoint("blr1.digitaloceanspaces.com"); // Use the correct endpoint for your region
-  const s3 = new AWS.S3({
-    endpoint: spacesEndpoint,
-    accessKeyId: process.env.SPACES_KEY,
-    secretAccessKey: process.env.SPACES_SECRET,
-  });
 
-  const compressedImageBuffer = await sharp(buffer)
-    .resize(700, 700)
-    .toFormat("jpeg")
-    .jpeg({ quality: 80 })
-    .toBuffer();
-  // Set the bucket name and file path
-  const bucketName = "cpet-storage";
-  const filePath = `creators/${
-    req.body.name + Math.floor(Date.now() / 1000)
-  }.jpeg`;
-
-  // Set the upload parameters
-  const uploadParams = {
-    Bucket: bucketName,
-    Key: filePath,
-    Body: compressedImageBuffer,
-    ACL: "public-read", // Set the desired ACL for the uploaded file
-  };
   try {
-    const uploadResult = await s3.upload(uploadParams).promise();
-    const thumbnailURL = uploadResult.Location;
+    const imageURL = await uploadImage(req);
 
     let creator = await Creator.create({
       ...req.body,
-      image: thumbnailURL,
+      image: imageURL,
     });
     res.status(201).json(creator);
   } catch (error) {
@@ -104,7 +110,6 @@ router.delete("/:id", async (req, res, next) => {
     next(err);
   }
 });
-
 
 exports.updateCreatorThumbnail = async (req, res, next) => {
   try {
