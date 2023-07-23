@@ -64,10 +64,11 @@ router.get("/", async (req, res, next) => {
     next(error);
   }
 });
-router.get("/:id", async (req, res, next) => {
+router.get("/:slug", async (req, res, next) => {
   try {
-    const creator = await Creator.findById(req.params.id, {
+    const creator = await Creator.findOne({
       deleted: { $ne: true },
+      slug: req.params.slug,
     });
     if (!creator) {
       return res.status(404).json({ message: "creator not found" });
@@ -79,7 +80,13 @@ router.get("/:id", async (req, res, next) => {
 });
 router.patch("/:slug", async (req, res, next) => {
   try {
-    let creator = await Creator.findByIdAndUpdate(req.params.slug, req.body);
+    let creator = await Creator.findOneAndUpdate(
+      { slug: req.params.slug },
+      { name: req.body.name, description: req.body.description },
+      {
+        new: true,
+      }
+    );
     res.json(creator);
   } catch (err) {
     next(err);
@@ -101,57 +108,27 @@ router.delete("/:id", async (req, res, next) => {
   }
 });
 
-exports.updateCreatorThumbnail = async (req, res, next) => {
-  try {
-    if (!req.file) {
-      return res.status(400).json({ error: "No image provided" });
+router.patch(
+  "/thumbnail/:slug",
+  upload.single("image"),
+  async (req, res, next) => {
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: "No image provided" });
+      }
+      let image = await uploadImage(req);
+      let creator = await Creator.findOneAndUpdate(
+        { slug: req.params.slug },
+        { image },
+        { new: true }
+      );
+      res.status(200).json({
+        updated: true,
+        creator,
+      });
+    } catch (err) {
+      next(err);
     }
-
-    const spacesEndpoint = new AWS.Endpoint("blr1.digitaloceanspaces.com"); // Use the correct endpoint for your region
-    const s3 = new AWS.S3({
-      endpoint: spacesEndpoint,
-      accessKeyId: process.env.SPACES_KEY,
-      secretAccessKey: process.env.SPACES_SECRET,
-    });
-
-    const { originalname, buffer } = req.file;
-
-    const compressedImageBuffer = await sharp(buffer)
-      .resize({ fit: "inside", withoutEnlargement: true })
-      .toFormat("jpeg")
-      .jpeg({ quality: 80 })
-      .toBuffer();
-
-    // Set the bucket name and file path
-    const bucketName = "cpet-storage";
-    const filePath = `creators/${originalname}`;
-
-    // Set the upload parameters
-    const uploadParams = {
-      Bucket: bucketName,
-      Key: filePath,
-      Body: compressedImageBuffer,
-      ACL: "public-read", // Set the desired ACL for the uploaded file
-    };
-
-    // Upload the file to DigitalOcean Spaces
-    const uploadResult = await s3.upload(uploadParams).promise();
-    const thumbnailURL = uploadResult.Location;
-
-    // Update the course with the new thumbnail URL
-    const course = await Creator.findByIdAndUpdate(
-      req.params.id,
-      { image: thumbnailURL },
-      { new: true }
-    );
-
-    if (!course) {
-      return res.status(404).json({ error: "Course not found" });
-    }
-
-    res.json(course);
-  } catch (err) {
-    next(err);
   }
-};
+);
 module.exports = router;
