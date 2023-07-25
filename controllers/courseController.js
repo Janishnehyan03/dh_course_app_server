@@ -59,7 +59,7 @@ exports.createCourse = async (req, res, next) => {
 exports.getAllCourses = async (req, res, next) => {
   try {
     let { sort } = req.query;
-    let populateFields = "creator,category";
+    let populateFields = "creators,category";
     const courses = await getAllItems(Course, req.query, populateFields, sort);
     res.json({ results: courses.length, courses });
   } catch (err) {
