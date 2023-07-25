@@ -41,11 +41,13 @@ const courseSchema = new mongoose.Schema(
       ref: "Category",
       required: [true, "Category is required."],
     },
-    creator: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Creator",
-      required: [true, "Creator is required."],
-    },
+    creators: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Creator",
+        required: [true, "Creator is required."],
+      },
+    ],
     deleted: {
       type: Boolean,
       default: false,
@@ -55,12 +57,11 @@ const courseSchema = new mongoose.Schema(
         videoUrl: {
           type: String,
           // select: false,
-          required:true
-
+          required: true,
         },
         videoTitle: {
           type: String,
-          required:true
+          required: true,
         },
       },
     ],

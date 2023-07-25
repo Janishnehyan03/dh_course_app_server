@@ -1,0 +1,18 @@
+[
+  {
+    "name": "John Doe",
+    "image": "https://unsplash.com/photos/a-man-wearing-glasses-and-a-black-shirt-iEEBWgY_6lA",
+    "description": "John Doe is an experienced web developer and instructor passionate about teaching web development to beginners.",
+    "deleted": false,
+    "slug": "john-doe",
+    "_id": "64be140a3a18065a9a1d237b"
+  },
+  {
+    "name": "Jane",
+    "image": "https://images.unsplash.com/photo-1557862921-37829c790f19?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1171&q=80",
+    "description": "Jane is a talented artist with a focus on digital illustrations and character design.",
+    "deleted": false,
+    "slug": "jane",
+    "_id": "64be14053a18065a9a1d2377"
+  }
+]

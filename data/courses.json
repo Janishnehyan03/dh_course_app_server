@@ -1,0 +1,88 @@
+[
+    {
+      "_id": "64bf3f7a1c03d684e590f407",
+      "title": "Introduction to Web Design",
+      "slug": "introduction-to-web-design",
+      "description": "Discover the world of web design and learn about HTML, CSS, and responsive design principles. Create stunning websites that work seamlessly across all devices.",
+      "thumbnail": "https://unsplash.com/photos/gMsnXqILjp4",
+      "previewVideo": "https://www.youtube.com/watch?v=example-preview-video",
+      "learners": [],
+      "price": 59.99,
+      "category": "641676cb56a91a698d290acf",
+      "creator": "64be140a3a18065a9a1d237b",
+      "deleted": false,
+      "videos": [
+        {
+          "videoTitle": "Getting Started with HTML",
+          "videoUrl": "https://www.youtube.com/watch?v=6K5DACDkm-k"
+        },
+        {
+          "videoTitle": "Styling with CSS",
+          "videoUrl": "https://www.youtube.com/watch?v=FkkQJsy6DpA"
+        },
+        {
+          "videoTitle": "Responsive Web Design",
+          "videoUrl": "https://www.youtube.com/watch?v=iuQZ_5Hg3TI"
+        }
+      ]
+    },
+    {
+      "_id": "64bf3f7a1c03d684e590f408",
+      "title": "Android App Development",
+      "slug": "android-app-development",
+      "description": "Learn how to build Android apps from scratch using Java and Android Studio. Develop practical skills to create engaging and user-friendly mobile applications.",
+      "thumbnail": "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8Y291cnNlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
+      "previewVideo": "https://www.youtube.com/watch?v=example-android-preview",
+      "learners": [],
+      "price": 79.99,
+      "category": "64bce89c5006e243386db534",
+      "creator": "64be140a3a18065a9a1d237b",
+      "deleted": false,
+      "videos": [
+        {
+          "videoTitle": "Getting Started with Android Studio",
+          "videoUrl": "https://www.youtube.com/watch?v=6K5DACDkm-k"
+        },
+        {
+          "videoTitle": "Java Basics for Android",
+          "videoUrl": "https://www.youtube.com/watch?v=FkkQJsy6DpA"
+        },
+        {
+          "videoTitle": "Handling User Input",
+          "videoUrl": "https://www.youtube.com/watch?v=iuQZ_5Hg3TI"
+        }
+      ]
+    },
+    {
+      "_id": "64bf3f7a1c03d684e590f409",
+      "title": "Data Science with Python",
+      "slug": "data-science-with-python",
+      "description": "Explore the field of data science using Python. Learn data analysis, machine learning, and data visualization techniques to extract insights from data.",
+      "thumbnail": "https://unsplash.com/photos/EeS69TTPQ18",
+      "previewVideo": "https://www.youtube.com/watch?v=example-datascience-preview",
+      "learners": [],
+      "price": 89.99,
+      "category": "64bbfb5ce25214623f709f82",
+      "creator": "64be14053a18065a9a1d2377",
+      "deleted": false,
+      "videos": [
+        {
+          "videoTitle": "Introduction to Data Analysis",
+          "videoUrl": "https://www.youtube.com/watch?v=aeHqYLgZP84"
+        },
+        {
+          "videoTitle": "Machine Learning Fundamentals",
+          "videoUrl": "https://www.youtube.com/watch?v=lgCNTuLBMK4"
+        },
+        {
+          "videoTitle": "Data Visualization with Matplotlib",
+          "videoUrl": "https://www.youtube.com/watch?v=A1JN_UN3mYE"
+        },
+        {
+          "videoTitle": "Data Manipulation with Pandas",
+          "videoUrl": "https://www.youtube.com/watch?v=aeHqYLgZP84"
+        }
+      ]
+    }
+  ]
+  

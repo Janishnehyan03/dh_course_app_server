@@ -1,0 +1,28 @@
+[
+  {
+    "_id": {
+      "$oid": "641676cb56a91a698d290acf"
+    },
+    "name": "Full Stack Development",
+    "createdAt": {
+      "$date": "2023-03-19T02:43:23.060Z"
+    },
+    "updatedAt": {
+      "$date": "2023-07-22T16:55:51.466Z"
+    },
+    "__v": 0
+  },
+  {
+    "_id": {
+      "$oid": "64bbfb5ce25214623f709f82"
+    },
+    "name": "FullsStack Development",
+    "createdAt": {
+      "$date": "2023-07-22T15:53:01.001Z"
+    },
+    "updatedAt": {
+      "$date": "2023-07-22T15:53:15.593Z"
+    },
+    "__v": 0
+  }
+]

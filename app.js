@@ -13,6 +13,9 @@ const cookieParser = require("cookie-parser");
 const AppError = require("./utils/AppError");
 const cors = require("cors");
 const fs = require("fs");
+const Creator = require("./models/CreatorModel");
+const path = require("path");
+const Course = require("./models/CourseModel");
 const app = express();
 require("aws-sdk/lib/maintenance_mode_message").suppress = true;
 
@@ -93,5 +96,35 @@ app.use(errorController);
 app.all("*", (req, res, next) => {
   next(new AppError(`Cant find ${req.originalUrl}  on the server`, 404));
 });
+
+
+async function importData(filePath) {
+  try {
+    // Read the JSON data from the file
+    const rawData = fs.readFileSync(filePath);
+    const dataArray = JSON.parse(rawData);
+
+    // Check if the dataArray is not empty
+    if (dataArray.length === 0) {
+      console.log("Data array is empty. Nothing to import.");
+      return;
+    }
+
+    // Loop through the dataArray and save each data object to the database
+    for (const data of dataArray) {
+      const newCreator = new Course(data);
+      await newCreator.save();
+      console.log(`Data for creator "${data.name}" has been imported.`);
+    }
+
+    console.log("Data import completed successfully!");
+  } catch (error) {
+    console.error("Error importing data:", error);
+  } 
+}
+
+// Example usage:
+const filePath = path.join(__dirname, "data/courses.json");
+// importData(filePath);
 
 module.exports = app;
