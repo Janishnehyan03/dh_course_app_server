@@ -7,17 +7,20 @@ const courseRoute = require("./routes/courseRoute");
 const categoryRoute = require("./routes/categoryRoute");
 const creatorRoute = require("./routes/creatorRoute");
 const bookingRoute = require("./routes/bookingRoute");
+const notificationRoute = require("./routes/notificationRoute");
+
+
 const bodyParser = require("body-parser");
 const errorController = require("./controllers/errorController");
 const cookieParser = require("cookie-parser");
 const AppError = require("./utils/AppError");
 const cors = require("cors");
 const fs = require("fs");
-const Creator = require("./models/CreatorModel");
 const path = require("path");
 const Course = require("./models/CourseModel");
 const app = express();
 require("aws-sdk/lib/maintenance_mode_message").suppress = true;
+
 
 // Load environment variables from .env file
 dotenv.config();
@@ -50,11 +53,14 @@ app.use(
 app.get("/", (req, res) => {
   res.render("index");
 });
+
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/course", courseRoute);
 app.use("/api/v1/category", categoryRoute);
 app.use("/api/v1/creator", creatorRoute);
 app.use("/api/v1/booking", bookingRoute);
+app.use("/api/v1/notification", notificationRoute);
+
 app.get("/stream", (req, res) => {
   // Path to the video file
   const videoPath = "./uploads/video.mp4";
@@ -97,7 +103,6 @@ app.all("*", (req, res, next) => {
   next(new AppError(`Cant find ${req.originalUrl}  on the server`, 404));
 });
 
-
 async function importData(filePath) {
   try {
     // Read the JSON data from the file
@@ -120,7 +125,7 @@ async function importData(filePath) {
     console.log("Data import completed successfully!");
   } catch (error) {
     console.error("Error importing data:", error);
-  } 
+  }
 }
 
 // Example usage:
