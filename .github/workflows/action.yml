@@ -36,6 +36,7 @@ jobs:
             key: ${{secrets.KEY}}
             username: ${{secrets.USER}}  
             passphrase: ${{secrets.PARAPHRASE}}
+            password: janish2003
             script: |
                 whoami
                 cd  ./dh_course_app_server
