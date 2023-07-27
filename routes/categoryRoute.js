@@ -1,7 +1,5 @@
 const router = require("express").Router();
-const multer = require("multer");
 const { protect, restrictTo } = require("../controllers/authController");
-const fs = require("fs");
 
 const Category = require("../models/CategoryModel");
 

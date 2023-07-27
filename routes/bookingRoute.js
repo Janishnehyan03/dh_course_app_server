@@ -12,26 +12,31 @@ const instance = new Razorpay({
 router.post("/:id", protect, async (req, res, next) => {
   try {
     const course = await Course.findById(req.params.id);
+
     const options = {
-      amount: course.price * 100, // amount in the smallest currency unit
+      amount: parseInt(course.price * 100), // amount in the smallest currency unit
       currency: "INR",
       receipt: "order_rcptid_11",
     };
+
     instance.orders.create(options, async function (err, order) {
-      await Booking.create({
-        course: req.params.id,
-        user: req.user._id,
-        razorpay_order_id: order.id,
-        price: course.price,
-      });
-      res.status(200).json({
-        status: "success",
-        order,
-      });
+      if (!err) {
+        await Booking.create({
+          course: req.params.id,
+          user: req.user._id,
+          razorpay_order_id: order.id,
+          price: course.price,
+        });
+        res.status(200).json({
+          status: "success",
+          order,
+        });
+      } else {
+        console.error(err);
+      }
     });
   } catch (error) {
-    console.log(error);
-    res.status(400).json(error);
+    next(error);
   }
 });
 router.post("/success/booking", protect, async (req, res, next) => {
@@ -80,7 +85,11 @@ function verifyPayment(paymentId, orderId, signature, courseId, userId) {
         { paid: true },
         { new: true }
       );
-      await Course.findByIdAndUpdate(courseId, { $addToSet: { learners: userId } },{new:true});
+      await Course.findByIdAndUpdate(
+        courseId,
+        { $addToSet: { learners: userId } },
+        { new: true }
+      );
       resolve();
     } else {
       reject();
