@@ -8,6 +8,7 @@ const categoryRoute = require("./routes/categoryRoute");
 const creatorRoute = require("./routes/creatorRoute");
 const bookingRoute = require("./routes/bookingRoute");
 const notificationRoute = require("./routes/notificationRoute");
+const wishListRoute = require("./routes/wishListRoute");
 
 
 const bodyParser = require("body-parser");
@@ -60,6 +61,7 @@ app.use("/api/v1/category", categoryRoute);
 app.use("/api/v1/creator", creatorRoute);
 app.use("/api/v1/booking", bookingRoute);
 app.use("/api/v1/notification", notificationRoute);
+app.use('/api/v1/wishlist',wishListRoute)
 
 app.get("/stream", (req, res) => {
   // Path to the video file
