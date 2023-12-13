@@ -7,7 +7,6 @@ const courseRoute = require("./routes/courseRoute");
 const categoryRoute = require("./routes/categoryRoute");
 const creatorRoute = require("./routes/creatorRoute");
 const bookingRoute = require("./routes/bookingRoute");
-const notificationRoute = require("./routes/notificationRoute");
 const wishListRoute = require("./routes/wishListRoute");
 
 
@@ -60,7 +59,6 @@ app.use("/api/v1/course", courseRoute);
 app.use("/api/v1/category", categoryRoute);
 app.use("/api/v1/creator", creatorRoute);
 app.use("/api/v1/booking", bookingRoute);
-app.use("/api/v1/notification", notificationRoute);
 app.use('/api/v1/wishlist',wishListRoute)
 
 app.get("/stream", (req, res) => {

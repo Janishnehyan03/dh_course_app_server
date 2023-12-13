@@ -1,88 +1,91 @@
 [
-    {
-      "_id": "64bf3f7a1c03d684e590f407",
-      "title": "Introduction to Web Design",
-      "slug": "introduction-to-web-design",
-      "description": "Discover the world of web design and learn about HTML, CSS, and responsive design principles. Create stunning websites that work seamlessly across all devices.",
-      "thumbnail": "https://unsplash.com/photos/gMsnXqILjp4",
-      "previewVideo": "https://www.youtube.com/watch?v=example-preview-video",
-      "learners": [],
-      "price": 59.99,
-      "category": "641676cb56a91a698d290acf",
-      "creator": "64be140a3a18065a9a1d237b",
-      "deleted": false,
-      "videos": [
-        {
-          "videoTitle": "Getting Started with HTML",
-          "videoUrl": "https://www.youtube.com/watch?v=6K5DACDkm-k"
-        },
-        {
-          "videoTitle": "Styling with CSS",
-          "videoUrl": "https://www.youtube.com/watch?v=FkkQJsy6DpA"
-        },
-        {
-          "videoTitle": "Responsive Web Design",
-          "videoUrl": "https://www.youtube.com/watch?v=iuQZ_5Hg3TI"
-        }
-      ]
-    },
-    {
-      "_id": "64bf3f7a1c03d684e590f408",
-      "title": "Android App Development",
-      "slug": "android-app-development",
-      "description": "Learn how to build Android apps from scratch using Java and Android Studio. Develop practical skills to create engaging and user-friendly mobile applications.",
-      "thumbnail": "https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8Y291cnNlfGVufDB8fDB8fHww&auto=format&fit=crop&w=500&q=60",
-      "previewVideo": "https://www.youtube.com/watch?v=example-android-preview",
-      "learners": [],
-      "price": 79.99,
-      "category": "64bce89c5006e243386db534",
-      "creator": "64be140a3a18065a9a1d237b",
-      "deleted": false,
-      "videos": [
-        {
-          "videoTitle": "Getting Started with Android Studio",
-          "videoUrl": "https://www.youtube.com/watch?v=6K5DACDkm-k"
-        },
-        {
-          "videoTitle": "Java Basics for Android",
-          "videoUrl": "https://www.youtube.com/watch?v=FkkQJsy6DpA"
-        },
-        {
-          "videoTitle": "Handling User Input",
-          "videoUrl": "https://www.youtube.com/watch?v=iuQZ_5Hg3TI"
-        }
-      ]
-    },
-    {
-      "_id": "64bf3f7a1c03d684e590f409",
-      "title": "Data Science with Python",
-      "slug": "data-science-with-python",
-      "description": "Explore the field of data science using Python. Learn data analysis, machine learning, and data visualization techniques to extract insights from data.",
-      "thumbnail": "https://unsplash.com/photos/EeS69TTPQ18",
-      "previewVideo": "https://www.youtube.com/watch?v=example-datascience-preview",
-      "learners": [],
-      "price": 89.99,
-      "category": "64bbfb5ce25214623f709f82",
-      "creator": "64be14053a18065a9a1d2377",
-      "deleted": false,
-      "videos": [
-        {
-          "videoTitle": "Introduction to Data Analysis",
-          "videoUrl": "https://www.youtube.com/watch?v=aeHqYLgZP84"
-        },
-        {
-          "videoTitle": "Machine Learning Fundamentals",
-          "videoUrl": "https://www.youtube.com/watch?v=lgCNTuLBMK4"
-        },
-        {
-          "videoTitle": "Data Visualization with Matplotlib",
-          "videoUrl": "https://www.youtube.com/watch?v=A1JN_UN3mYE"
-        },
-        {
-          "videoTitle": "Data Manipulation with Pandas",
-          "videoUrl": "https://www.youtube.com/watch?v=aeHqYLgZP84"
-        }
-      ]
+  {
+    "title": "Computer Science Fundamentals",
+    "image": "https://images.unsplash.com/photo-1682685797736-dabb341dc7de?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHwxfHx8ZW58MHx8fHx8",
+    "units": [
+      {
+        "title": "Unit 1: Introduction to Programming",
+        "description": "Explore the basics of programming and computer science.",
+        "videos": [
+          {
+            "title": "Video 1: Getting Started with Programming",
+            "videoUrl": "https://www.youtube.com/watch?v=OQ4dgIA1hSY",
+            "description": "Learn about the fundamental concepts of programming."
+          },
+          {
+            "title": "Video 2: Variables and Data Types",
+            "videoUrl": "https://www.youtube.com/watch?v=VG_kOo7bloA",
+            "description": "Understand how variables and data types work in programming."
+          }
+        ]
+      },
+      {
+        "title": "Unit 2: Algorithms and Data Structures",
+        "description": "Delve into algorithms and data structures for effective problem-solving.",
+        "videos": [
+          {
+            "title": "Video 3: Introduction to Algorithms",
+            "videoUrl": "https://www.youtube.com/watch?v=L7JvUCJX1t8",
+            "description": "Learn the basics of algorithms and their importance in computing."
+          },
+          {
+            "title": "Video 4: Data Structures Explained",
+            "videoUrl": "https://www.youtube.com/watch?v=HNCI-809wXE",
+            "description": "Explore common data structures used in computer science."
+          }
+        ]
+      },
+      {
+        "title": "Unit 3: Web Development Basics",
+        "description": "Discover the essentials of web development and design.",
+        "videos": [
+          {
+            "title": "Video 5: Introduction to HTML",
+            "videoUrl": "https://www.youtube.com/watch?v=UB1O30fR-EE",
+            "description": "Learn the fundamentals of HTML for creating web pages."
+          },
+          {
+            "title": "Video 6: CSS Styling Techniques",
+            "videoUrl": "https://www.youtube.com/watch?v=1PnVor36_40",
+            "description": "Explore CSS styling and layout techniques for web design."
+          }
+        ]
+      },
+      {
+        "title": "Unit 4: Mobile App Development",
+        "description": "Dive into the world of mobile app development for iOS and Android platforms.",
+        "videos": [
+          {
+            "title": "Video 7: Introduction to Mobile App Development",
+            "videoUrl": "https://www.youtube.com/watch?v=zZS2hNwH9b0",
+            "description": "Understand the basics of mobile app development and its importance."
+          },
+          {
+            "title": "Video 8: Building Your First App",
+            "videoUrl": "https://www.youtube.com/watch?v=8qWRBPjEGsk",
+            "description": "Learn the step-by-step process of building your first mobile app."
+          }
+        ]
+      },
+      {
+        "title": "Unit 5: Database Management",
+        "description": "Explore the principles of database management and design.",
+        "videos": [
+          {
+            "title": "Video 9: Introduction to Databases",
+            "videoUrl": "https://www.youtube.com/watch?v=HXV3zeQKqGY",
+            "description": "Learn the basics of databases and their role in information management."
+          },
+          {
+            "title": "Video 10: Relational Database Concepts",
+            "videoUrl": "https://www.youtube.com/watch?v=ztHopE5Wnpc",
+            "description": "Understand the concepts of relational databases and their implementation."
+          }
+        ]
+      }
+    ],
+    "category": {
+      "$oid": "641676cb56a91a698d290acf"
     }
-  ]
-  
+  }
+]

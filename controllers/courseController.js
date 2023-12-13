@@ -2,53 +2,17 @@ const Course = require("../models/CourseModel");
 const { getAllItems, setDeleteStatus } = require("./globalFunctions");
 const AWS = require("aws-sdk");
 const sharp = require("sharp");
+const cloudinary = require("cloudinary").v2;
 
-const uploadImage = async (req) => {
-  try {
-    const spacesEndpoint = new AWS.Endpoint("blr1.digitaloceanspaces.com"); // Use the correct endpoint for your region
-    const s3 = new AWS.S3({
-      endpoint: spacesEndpoint,
-      accessKeyId: process.env.SPACES_KEY,
-      secretAccessKey: process.env.SPACES_SECRET,
-    });
-    const {  buffer } = req.file;
-
-    const compressedImageBuffer = await sharp(buffer)
-      .resize(2000, 1333)
-      .toFormat("jpeg")
-      .jpeg({ quality: 80 })
-      .toBuffer();
-    // Set the bucket name and file path
-    const bucketName = "cpet-storage";
-    const filePath = `courses/${req.body.title}.jpeg`;
-
-    // Set the upload parameters
-    const uploadParams = {
-      Bucket: bucketName,
-      Key: filePath,
-      Body: compressedImageBuffer,
-      ACL: "public-read", // Set the desired ACL for the uploaded file
-    };
-    const uploadResult = await s3.upload(uploadParams).promise();
-    const thumbnailURL = uploadResult.Location;
-    return thumbnailURL;
-  } catch (error) {}
-};
+cloudinary.config({
+  cloud_name: "mern-chat",
+  api_key: "429624652472589",
+  api_secret: "itnPWv02w8Cpl67YxTH2qh3mO-w",
+});
 
 exports.createCourse = async (req, res, next) => {
-  if (!req.file) {
-    return res.status(400).json({ error: "No image provided" });
-  }
-  uploadImage(req);
-
   try {
-    // Upload the file to DigitalOcean Spaces
-    let imageUrl = await uploadImage(req);
-    const course = new Course({
-      ...req.body,
-      thumbnail: imageUrl,
-    });
-
+    const course = new Course(req.body);
     const newCourse = await course.save();
     res.status(201).json(newCourse);
   } catch (err) {
@@ -59,7 +23,7 @@ exports.createCourse = async (req, res, next) => {
 exports.getAllCourses = async (req, res, next) => {
   try {
     let { sort } = req.query;
-    let populateFields = "creators,category";
+    let populateFields = "category";
     const courses = await getAllItems(Course, req.query, populateFields, sort);
     res.json({ results: courses.length, courses });
   } catch (err) {
@@ -102,6 +66,42 @@ exports.addVideo = async (req, res, next) => {
     res.status(200).json(course);
   } catch (error) {
     next(error);
+  }
+};
+
+exports.addNote = async (req, res) => {
+  try {
+    const { videoId } = req.body;
+
+    // Find the video by its ID
+
+    const cloudinaryResult = await cloudinary.uploader.upload(req.file.path, {
+      folder: "notes",
+      width: 2400,
+      height: 1600,
+      crop: "limit",
+    });
+
+    const updatedVideo = await Course.findOneAndUpdate(
+      { "units.videos._id": videoId },
+      {
+        $push: {
+          "units.$.videos.$[video].notes": {
+            fileName: cloudinaryResult.secure_url,
+            // No text field in this case
+          },
+        },
+      },
+      {
+        arrayFilters: [{ "video._id": videoId }],
+        new: true,
+      }
+    );
+
+    return res.json({ message: "Note uploaded successfully", updatedVideo });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 

@@ -7,33 +7,33 @@ const {
   addVideo,
   editCourse,
   updateCourseThumbnail,
+  addNote,
 } = require("../controllers/courseController");
 const router = require("express").Router();
 const { protect, restrictTo } = require("../controllers/authController");
+const storage = multer.diskStorage({
+  destination: "/tmp",
+  filename: (req, file, cb) => {
+    cb(null, file.originalname);
+  },
+});
 
-// const storage = multer.diskStorage({
-//   destination: (req, file, cb) => {
-//     const folderName = "./uploads/courses";
-//     if (!fs.existsSync(folderName)) {
-//       fs.mkdirSync(folderName);
-//     }
-//     cb(null, folderName);
-//   },
-//   filename: (req, file, cb) => {
-//     cb(null, `${Date.now()}-${file.originalname}`);
-//   },
-// });
-
-const upload = multer();
+const upload = multer({ storage });
 
 router.post(
   "/",
   protect,
   restrictTo("admin"),
-  upload.single("thumbnail"),
   createCourse
 );
 router.post("/:id", protect, restrictTo("admin"), addVideo);
+router.patch(
+  "/notes/:id",
+  protect,
+  restrictTo("admin"),
+  upload.single("file"),
+  addNote
+);
 router.get("/", getAllCourses);
 router.get("/:slug", getOneCourse);
 router.delete("/:id", protect, restrictTo("admin"), deleteCourse);
